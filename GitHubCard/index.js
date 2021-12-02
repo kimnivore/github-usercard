@@ -5,12 +5,7 @@ import axios from 'axios';
     https://api.github.com/users/kimnivore
 */
 
-let kim = axios.get(' https://api.github.com/users/kimnivore')
-  .then(response => {
-    console.log(response);
-  }).catch(error => {
-    console.error(error);
-  }).finally(() => console.log('done'));
+
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
     github info! You will need to understand the structure of this
@@ -23,14 +18,6 @@ let kim = axios.get(' https://api.github.com/users/kimnivore')
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
-// cardCreator(kim);
-const entryPoint = document.querySelector('.cards');
-entryPoint.appendChild(cardCreator(kim));
-entryPoint.appendChild(cardCreator(tetondan));
-entryPoint.appendChild(cardCreator(dustinmyers));
-entryPoint.appendChild(cardCreator(justsml));
-entryPoint.appendChild(cardCreator(luishrd));
-entryPoint.appendChild(cardCreator(bigknell));
 
 
 /*
@@ -44,7 +31,23 @@ entryPoint.appendChild(cardCreator(bigknell));
     user, and adding that card to the DOM.
 */
 
-// const followersArray = [];
+// const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+
+// function makeCard(array) {
+//   for(let i = 0; i < array.length; i++){
+//     axios.get(`https://api.github.com/users/${array[i]}`)
+//     .then(response => {
+//       const myCard = cardCreator(response); // step 4
+//       document.querySelector('.cards').appendChild(myCard); //step 4
+//       console.log(response);
+//     }).catch(error => {
+//       console.error(error);
+//     }).finally(() => console.log('done'));
+// }
+// }
+
+// console.log(makeCard(followersArray));
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -76,7 +79,22 @@ entryPoint.appendChild(cardCreator(bigknell));
 
 //nth-of-type(2)
 
+// step 1 & 2 & 4
+// function getData(username) {
+  axios.get(`https://api.github.com/users/kimnivore`)
+    .then(response => {
+      const myCard = cardCreator(response); // step 4
+      document.querySelector('.cards').appendChild(myCard); //step 4
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    }).finally(() => console.log('done'));
+
+ 
+// step 3
 function cardCreator(obj){
+  // console.log(obj);
+  //create elements
   const card = document.createElement('div');
   const image = document.createElement('img');
   const cardInfo = document.createElement('div');
@@ -88,21 +106,21 @@ function cardCreator(obj){
   const followers = document.createElement('p');
   const following = document.createElement('p');
   const bio = document.createElement('p');
-
+  //setting class and content
   card.classList.add('card');
-  image.src = obj['avatar_url'];
+  image.src = obj.data['avatar_url'];
   cardInfo.classList.add('card-info');
   name.classList.add('name');
-  name.textContent = obj.name;
+  name.textContent = obj.data.name;
   username.classList.add('username');
-  username.textContent = obj.login;
-  location.textContent = `Location: ${obj.location}`;
-  profile.textContent = `Profile: ${obj['gists_url']}`;
-  profileAnchor.href = obj['gists_url'];
-  followers.textContent = `Followers: ${obj.followers}`;
-  following.textContent = `Following: ${obj.following}`;
-  bio.textContent = `Bio: ${obj.bio}`;
-
+  username.textContent = obj.data.login;
+  location.textContent = `Location: ${obj.data.location}`;
+  profile.textContent = `Profile: ${obj.data['html_url']}`;
+  profileAnchor.href = obj.data['html_url'];
+  followers.textContent = `Followers: ${obj.data.followers}`;
+  following.textContent = `Following: ${obj.data.following}`;
+  bio.textContent = `Bio: ${obj.data.bio}`;
+  //append children
   card.appendChild(image);
   card.appendChild(cardInfo);
   cardInfo.appendChild(name);
@@ -116,3 +134,22 @@ function cardCreator(obj){
 
   return card;
 }
+
+//step 5
+const followersArray = ['tetondan', 'dustinmyers', 'justsml', 'luishrd', 'bigknell'];
+
+
+function makeCard(array) {
+  for(let i = 0; i < array.length; i++){
+    axios.get(`https://api.github.com/users/${array[i]}`)
+    .then(response => {
+      const myCard = cardCreator(response); // step 4
+      document.querySelector('.cards').appendChild(myCard); //step 4
+      console.log(response);
+    }).catch(error => {
+      console.error(error);
+    }).finally(() => console.log('done'));
+}
+}
+
+console.log(makeCard(followersArray));
